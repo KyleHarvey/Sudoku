@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <title>Sudoku</title>
+        <style type="text/css">
+            html, body { min-height: 100%; }
+            body { background: #427999; background: linear-gradient(45deg, #427999  0%,#548CB1 100%); text-align: center; font-family: sans-serif; }
+            #sudoku { color: #fff; overflow: hidden; margin: 50px auto; display: inline-block; }
+            #sudoku table { margin: 25px 0; border: 2px solid rgba(255,255,255,0.8); transition: border-color 1s; }
+            #sudoku td { border: 1px solid rgba(255,255,255,0.3); position: relative; transition: border-color 1s; }
+            #sudoku tr:nth-child(3n) td { border-bottom: 2px solid rgba(255,255,255,0.8); transition: border-color 1s; }
+            #sudoku tr:last-child td { border-bottom: inherit; }
+            #sudoku td:nth-child(3n) { border-right: 2px solid rgba(255,255,255,0.7); transition: border-color 1s; }
+            #sudoku td:last-child { border-right: inherit; }
+            #sudoku table input {  
+                color: rgba(255,255,255,1);
+                background: transparent;
+                font-weight: lighter;
+                transition: background-color 1s;
+            }
+            #sudoku table input[readonly] {  
+                background-color: rgba(255,255,255,0.1);
+            }
+            #sudoku table input.num {  
+                background-color: rgba(0,0,0,0.1);
+            }
+            #sudoku.showing-notes table input.num + span {  
+                display: none;
+            }
+            #sudoku table input { font-size: 2em; width: 50px; height: 50px; margin: 0; padding: 0; border: 0; text-align: center; }
+            #sudoku.showing-notes .notes {  
+                display: block;
+            }
+            #sudoku .notes {  
+                display: none;
+                font-size: .75em;
+                position: absolute;
+                top: 3px;
+                right: 3px;
+                z-index: -1;
+                letter-spacing: .3em;
+                max-width: 40px;
+                word-wrap: break-word;
+                text-align: right;
+            }
+
+            /*Winner*/
+            #sudoku.winner {
+                animation-name: bounce; 
+                animation-duration: 1s; 
+                animation-delay: .5s;
+            }
+            #sudoku.winner table,
+            #sudoku.winner tr:nth-child(3n) td,
+            #sudoku.winner td:nth-child(3n),
+            #sudoku.winner td {
+                border-color: rgba(35, 207, 95, 0.5);
+            }
+            #sudoku.winner table input {
+                background-color: #23CF5F;
+            }
+        
+            /*animation*/
+            @keyframes bounce {
+                0% {
+                    transform: scale(1);
+                }
+                25% {
+                    transform: scale(1.1);
+                }
+                50% {
+                    transform: scale(1);
+                }
+                75% {
+                    transform: scale(1.025);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="sudoku">
+            <table cellspacing="0" cellpadding="0">
+                <tbody>
+                    <tr>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                    </tr>
+                    <tr>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                    </tr>
+                    <tr>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                    </tr>
+                    <tr>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                    </tr>
+                    <tr>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                    </tr>
+                    <tr>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                    </tr>
+                    <tr>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                    </tr>
+                    <tr>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                    </tr>
+                    <tr>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                        <td><input maxlength="1"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>
