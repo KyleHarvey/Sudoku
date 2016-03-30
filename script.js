@@ -79,8 +79,41 @@ function Sudoku(puzzle) {
         }
     }
 
+    //Navigate puzzle with arrow keys
+    function moveFocus(num) {
+        if (num >= 0 && num < 81) {
+            spaces[num].focus();
+        }
+    }
+    function goToSpace(evt) {
+        var space = parseInt(evt.target.dataset.x) * 9  + parseInt(evt.target.dataset.y);
+        switch(evt.which) {
+            case 37: // left
+                moveFocus(space-1);
+                break;
+            case 38: // up
+                moveFocus(space-9);
+                break;
+            case 39: // right
+                moveFocus(space+1);
+                break;
+            case 40: // down
+                moveFocus(space+9);
+                break;
+
+            default: return;
+        }
+        evt.preventDefault();
+    };
+
     //event listeners
     sudoku.addEventListener('input', checkMove, false); //any change to input
+    sudoku.addEventListener('focus', function(evt) { 
+        if (evt.target.matches('input')) {
+            evt.target.select(); 
+        }
+    }, true);
+    sudoku.addEventListener('keydown', goToSpace, false);
 };
 Sudoku(
    [[5,3,0,0,7,0,0,0,0],
