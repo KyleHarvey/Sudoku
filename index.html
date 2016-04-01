@@ -27,15 +27,11 @@
             #sudoku table input.num {  
                 background-color: rgba(0,0,0,0.1);
             }
-            #sudoku.showing-notes table input.num + span {  
+            #sudoku table input.num + span {  
                 display: none;
             }
             #sudoku table input { font-size: 2em; width: 50px; height: 50px; margin: 0; padding: 0; border: 0; text-align: center; }
-            #sudoku.showing-notes .notes {  
-                display: block;
-            }
             #sudoku .notes {  
-                display: none;
                 font-size: .75em;
                 position: absolute;
                 top: 3px;
@@ -85,6 +81,7 @@
     </head>
     <body>
         <div id="sudoku">
+            <label><input id="tnotes" type='checkbox' value='toggle_notes'>Add Notes (n key)</label>
             <table cellspacing="0" cellpadding="0">
                 <tbody>
                     <tr>
