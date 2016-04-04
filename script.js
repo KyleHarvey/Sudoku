@@ -1,7 +1,7 @@
 function Sudoku(puzzle) {
     var sudoku = document.getElementById('sudoku');
     var spaces = document.querySelectorAll("#sudoku table input");
-    var toggleNotes = document.getElementById('tnotes');
+    var autoNotes = false;
     fillPuzzle();
 
     //
@@ -22,6 +22,32 @@ function Sudoku(puzzle) {
                 }
             }
         }
+    };
+
+    //
+    //returns values against row / column
+    function getConflictValues(row,col) {
+        var i,arr = [];
+        for(i=0; i<9; i++) {
+            if( spaces[row*9+i].value && row*9+i !== row*9+col) {
+                arr.push(parseInt(spaces[row*9+i].value, 10));
+            }
+            if( spaces[i*9+col].value && i*9+col !== row*9+col ) {
+                arr.push(parseInt(spaces[i*9+col].value, 10));
+            }
+        }
+
+        //check pod
+        var podRow = Math.floor(row/3)*3;
+        var podCol = Math.floor(col/3)*3;
+        for(i=podRow; i<podRow+3; i++) {
+            for(j=podCol; j<podCol+3; j++) {
+                if(spaces[i*9+j].value  && i*9+j !== row*9+col) {
+                    arr.push(parseInt(spaces[i*9+j].value,10));
+                }
+            }
+        }
+        return arr;
     };
 
     //
@@ -70,6 +96,9 @@ function Sudoku(puzzle) {
         evt.target.classList.add('num');
         setTimeout(function() {
             evt.target.select(); //keep selected for ux
+            if(autoNotes) {
+                getNotes();
+            }
             checkWin();
         }, 0);
     }
@@ -88,6 +117,18 @@ function Sudoku(puzzle) {
         }
         el.innerHTML = notes.sort().join('');
     }
+    function getNotes() {
+        var starterNotes = [1,2,3,4,5,6,7,8,9], notes;
+        Array.prototype.forEach.call(spaces, function(el) {
+            if(!el.value) {
+                var arr = getConflictValues(parseInt(el.dataset.x, 10), parseInt(el.dataset.y, 10));
+                notes = starterNotes.filter(function(e) {
+                    return arr.indexOf(e) < 0;
+                });
+                el.nextSibling.innerHTML = notes.join('');
+            }
+        });
+    }
 
     //Navigate puzzle with arrow keys
     function moveFocus(num) {
@@ -95,7 +136,7 @@ function Sudoku(puzzle) {
             spaces[num].focus();
         }
     }
-    function goToSpace(evt) {
+    function keyDown(evt) {
         var space = parseInt(evt.target.dataset.x) * 9  + parseInt(evt.target.dataset.y);
         switch(evt.which) {
             case 37: // left
@@ -110,6 +151,10 @@ function Sudoku(puzzle) {
             case 40: // down
                 moveFocus(space+9);
                 break;
+            case 78: // n key (toggle notes)
+                toggleNotes.checked = !toggleNotes.checked;
+                evt.preventDefault();
+                break;
 
             default: return;
         }
@@ -117,12 +162,8 @@ function Sudoku(puzzle) {
     };
 
     //event listeners
-    document.addEventListener('keydown', function(evt) {
-        if(evt.keyCode == 78) { //n
-            toggleNotes.checked = !toggleNotes.checked;
-            evt.preventDefault();
-        }
-    });
+    sudoku.addEventListener('keydown', keyDown, false);
+    var toggleNotes = document.getElementById('tnotes');
     sudoku.addEventListener('keypress', function(evt) {
         if (evt.keyCode > 48 && evt.keyCode < 58) {
             if(toggleNotes.checked) {
@@ -140,12 +181,18 @@ function Sudoku(puzzle) {
             evt.target.classList.remove('num');
         }
     }, false);
+    var aNotes = document.getElementById('autonotes');
+    aNotes.addEventListener('click', function() {
+        autoNotes = !autoNotes;
+        if(autoNotes) {
+            getNotes();
+        }
+    });
     sudoku.addEventListener('focus', function(evt) { 
         if (evt.target.matches('input')) {
             evt.target.select(); 
         }
     }, true);
-    sudoku.addEventListener('keydown', goToSpace, false);
 };
 Sudoku(
    [[5,3,0,0,7,0,0,0,0],

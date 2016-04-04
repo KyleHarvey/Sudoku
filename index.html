@@ -9,7 +9,14 @@
             html, body { min-height: 100%; }
             body { background: #427999; background: linear-gradient(45deg, #427999  0%,#548CB1 100%); text-align: center; font-family: sans-serif; }
             #sudoku { color: #fff; overflow: hidden; margin: 50px auto; display: inline-block; }
-            #sudoku table { margin: 25px 0; border: 2px solid rgba(255,255,255,0.8); transition: border-color 1s; }
+            #sudoku .key { text-align: right; color: rgba(255,255,255,0.75); font-size: .875em; }
+            #sudoku .key label { padding: .75em .5em; margin-left: .5em; display: inline-block; border-radius: 3px; position: relative; overflow: hidden; }
+            #sudoku .key input[type='checkbox'] + i { position: absolute; top: 0; right: 0; bottom: 0; left: 0; } /*Hack*/
+            #sudoku .key label:hover i { background-color: rgba(255,255,255,0.1); } /*Hack*/
+            #sudoku .key input[type=checkbox]:checked ~ i { background-color: rgba(0,0,0,0.1); } /*Hack*/
+            #sudoku .key dl dt { display: inline-block; font-weight: bold; } 
+            #sudoku .key dl dd { display: inline-block; margin-left: 0em; } 
+            #sudoku table { margin: 10px 0; border: 2px solid rgba(255,255,255,0.8); transition: border-color 1s; }
             #sudoku td { border: 1px solid rgba(255,255,255,0.3); position: relative; transition: border-color 1s; }
             #sudoku tr:nth-child(3n) td { border-bottom: 2px solid rgba(255,255,255,0.8); transition: border-color 1s; }
             #sudoku tr:last-child td { border-bottom: inherit; }
@@ -81,7 +88,10 @@
     </head>
     <body>
         <div id="sudoku">
-            <label><input id="tnotes" type='checkbox' value='toggle_notes'>Add Notes (n key)</label>
+            <div class="key">
+                <label><input id="tnotes" type='checkbox' value='toggle_notes' title="toggle with 'n' key">User Notes<i></i></label>
+                <label><input id="autonotes" type='checkbox' value='toggle_notes'>Auto Notes<i></i></label>
+            </div>
             <table cellspacing="0" cellpadding="0">
                 <tbody>
                     <tr>
@@ -185,6 +195,12 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="key">
+                <dl>
+                    <dt>n key:</dt>
+                    <dd>Toggle user notes.</dd>
+                </dl>
+            </div>
         </div>
         <script src="script.js"></script>
     </body>
